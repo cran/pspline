@@ -1,5 +1,5 @@
 Package: pspline
-Version: 1.0-4
+Version: 1.0-5
 Title: Penalized Smoothing Splines
 Author: S original by Jim Ramsey <ramsay@psych.mcgill.ca>. 
         R port by  Brian Ripley <ripley@stats.ox.ac.uk>.

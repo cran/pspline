@@ -8,10 +8,10 @@ Uses an object of class \code{"smooth.Pspline"} to evaluate a polynomial smoothi
 spline of arbitrary order or one of its derivatives at new argument values.
 }
 \usage{
-predict.smooth.Pspline(splobj, xarg, nderiv=0)
+predict.smooth.Pspline(object, xarg, nderiv=0, ...)
 }
 \arguments{
-\item{splobj}{
+\item{object}{
 a fitted \code{smooth.Pspline} object.
 }
 \item{xarg}{
@@ -19,8 +19,11 @@ the argument values at which the spline or its derivative is to be
 evaluated.
 }
 \item{nderiv}{
-the order of the derivative required -- default is 0, the function itself.
-}}
+  the order of the derivative required -- default is 0, the function
+  itself.
+}
+\item{\dots}{further arguments passed to or from other methods.}
+}
 \value{
 a list with components \code{xarg} and \code{dy}; the \code{xarg} component is identical
 to the input \code{xarg} sequence, the \code{dy} component is the evaluated derivative

@@ -1,5 +1,5 @@
-smooth.Pspline <- function(x, y, w=rep(1, length(x)), norder=2, 
-                           df=norder+2, spar=0, method=1) 
+smooth.Pspline <- function(x, y, w=rep(1, length(x)), norder=2,
+                           df=norder+2, spar=0, method=1)
 {
 
   #  Computes order NORDER polynomial smoothing spline:  the spline
@@ -45,7 +45,7 @@ smooth.Pspline <- function(x, y, w=rep(1, length(x)), norder=2,
   if (norder <= 1 | norder >= 19) stop("Wrong value for NORDER")
 
   yhat     <- matrix(0,n,nvar)
-  nworksiz <- (n-norder)*(4*norder + 3) + n 
+  nworksiz <- (n-norder)*(4*norder + 3) + n
   work     <- rep(0,nworksiz)
   lev      <- rep(0,n)
   gcv      <- 0
@@ -54,13 +54,13 @@ smooth.Pspline <- function(x, y, w=rep(1, length(x)), norder=2,
   ier      <- 0
   irerun   <- 0
 
-  result <- .Fortran("pspline", 
-              as.integer(n),      as.integer(nvar),  as.integer(norder), 
-              as.double(x),       as.double(w), 
+  result <- .Fortran("pspline",
+              as.integer(n),      as.integer(nvar),  as.integer(norder),
+              as.double(x),       as.double(w),
               as.double(y),       as.double(yhat),   as.double(lev),
-              as.double(gcv),     as.double(cv),     as.double(df), 
-              as.double(spar),    as.double(dfmax), 
-              as.double(work),    as.integer(method), 
+              as.double(gcv),     as.double(cv),     as.double(df),
+              as.double(spar),    as.double(dfmax),
+              as.double(work),    as.integer(method),
               as.integer(irerun), as.integer(ier) )
 
   ier <- result[[17]]
@@ -78,38 +78,36 @@ smooth.Pspline <- function(x, y, w=rep(1, length(x)), norder=2,
   cv     <- result[[10]]
   df     <- result[[11]]
   spar   <- result[[12]]
-  object <- list(norder = norder, x = x, ysmth = ysmth,  lev = lev, 
-	         gcv = gcv, cv = cv,  df = df, 
+  object <- list(norder = norder, x = x, ysmth = ysmth,  lev = lev,
+	         gcv = gcv, cv = cv,  df = df,
 		 spar = spar, call = my.call)
   class(object) <- "smooth.Pspline"
   object
 
 }
 
-     
-  
-  
-predict.smooth.Pspline <- function(splobj, xarg, nderiv = 0) {
-	
-  if(missing(xarg)) return(splobj[c("x", "ysmth")])
 
-  x      <- splobj$x
-  ysmth  <- splobj$ysmth
-  norder <- 2*splobj$norder
+predict.smooth.Pspline <- function(object, xarg, nderiv = 0, ...) {
+
+  if(missing(xarg)) return(object[c("x", "ysmth")])
+
+  x      <- object$x
+  ysmth  <- object$ysmth
+  norder <- 2*object$norder
   n    <- length(x)
   nvar <- ncol(ysmth)
   narg <- length(xarg)
 
   if (nderiv < 0 | nderiv >= norder) stop("Violation of NDERIV >= NORDER.")
- 
+
   dy    <- matrix(0,narg,nvar)
   work  <- rep(0,(2*norder+2)*n + norder)
   ier   <- 0
 
-  result <- .Fortran("splifit", 
-                     as.integer(n),    as.integer(narg),   
+  result <- .Fortran("splifit",
+                     as.integer(n),    as.integer(narg),
                      as.integer(nvar), as.integer(norder), as.integer(nderiv),
-                     as.double(x),     as.double(ysmth),    
+                     as.double(x),     as.double(ysmth),
                      as.double(xarg),  as.double(dy),
                      as.double(work),  as.integer(ier) )
 
@@ -126,17 +124,17 @@ predict.smooth.Pspline <- function(splobj, xarg, nderiv = 0) {
   return(dy)
 }
 
-  
-plot.smooth.Pspline <- function(splobj, ...) {
-  if (is.vector(splobj$ysmth) | dim(splobj$ysmth)[[2]] == 1)  
-        plot (splobj$x, splobj$ysmth, ...) else
-     matplot (splobj$x, splobj$ysmth, ...)
+
+plot.smooth.Pspline <- function(x, ...) {
+  if (is.vector(x$ysmth) | dim(x$ysmth)[[2]] == 1)
+        plot (x$x, x$ysmth, ...) else
+     matplot (x$x, x$ysmth, ...)
 }
 
-lines.smooth.Pspline <- function(splobj, ...) {
-  if (is.vector(splobj$ysmth) | dim(splobj$ysmth)[[2]] == 1)  
-        lines (splobj$x, splobj$ysmth, ...) else
-     matlines (splobj$x, splobj$ysmth, ...)
+lines.smooth.Pspline <- function(x, ...) {
+  if (is.vector(x$ysmth) | dim(x$ysmth)[[2]] == 1)
+        lines (x$x, x$ysmth, ...) else
+     matlines (x$x, x$ysmth, ...)
 }
 
 print.smooth.Pspline <- function(x, ...)
