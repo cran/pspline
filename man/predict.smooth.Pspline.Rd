@@ -18,7 +18,7 @@ a fitted \code{smooth.Pspline} object.
 the argument values at which the spline or its derivative is to be
 evaluated.
 }
-\item{deriv}{
+\item{nderiv}{
 the order of the derivative required -- default is 0, the function itself.
 }}
 \value{

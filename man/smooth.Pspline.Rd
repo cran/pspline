@@ -14,7 +14,7 @@ polynomial smooth of the input data of order fixed by the user.
 \usage{
 smooth.Pspline(x, y, w=rep(1, length(x)), norder=2, df=norder + 2, 
                spar=0, method=1)
-sm.spline(x, y, w=rep(1, length(x)), cv=F, ...)
+sm.spline(x, y, w=rep(1, length(x)), cv=FALSE, ...)
 }
 \arguments{
 \item{x}{
@@ -69,6 +69,10 @@ internally generated value is used.
 
 \code{sm.spline} chooses this automatically based on the supplied values
 and that of \code{cv}.
+}
+\item{\dots}{
+  additional arguments to be passed to \code{smooth.Pspline}.
+}
 }
 \value{
 an object of class \code{"smooth.Pspline"} is returned, consisting of the fitted
