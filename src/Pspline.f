@@ -56,7 +56,7 @@ c
      2                lambda, dfmax, work, method, irerun, ier)
       implicit real*8(a-h,o-z)
       parameter (NORDLIM = 10)
-      dimension x(n), w(n), y(n,nvar), yhat(n,nvar), work(1), 
+      dimension x(n), w(n), y(n,nvar), yhat(n,nvar), work(*), 
      1          wk1(121), wk2(121)
       real*8 lambda, lev(n)
       logical spcwrd
@@ -183,7 +183,7 @@ c
       subroutine splcal (n, nvar, norder, x, w, y, yhat, lev,
      1                   gcv, cv, df, lambda, work, ier)
       implicit real*8(a-h,o-z)
-      dimension x(n), w(n), y(n,nvar), yhat(n,nvar), work(1), 
+      dimension x(n), w(n), y(n,nvar), yhat(n,nvar), work(*), 
      1          wk1(400), wk2(400)
       real*8 lambda, lev(n)
 c
@@ -443,7 +443,7 @@ c  SPCWRD ..  logical flag indicating equal spacing of the X values
 c
       subroutine gtwgfn (n, norder, x, w, work, wk, c, spcwrd)
       implicit real*8(a-h,o-z)
-      dimension x(1), w(1), work(1), c(20,1), wk(1)
+      dimension x(*), w(*), work(*), c(20,*), wk(*)
       logical spcwrd
 c
       nordp1 = norder + 1
@@ -547,7 +547,7 @@ c  IER ... error return
 c
       subroutine splipfn (n, x, index, norder, outip, ier)
       implicit real*8 (a-h,o-z)
-      dimension x(1), outip(1), quadpt(20), quadwt(20), biatx(20)
+      dimension x(*), outip(*), quadpt(20), quadwt(20), biatx(20)
       real*8 knot(40)
 c
       ier = 0
@@ -644,7 +644,7 @@ c
 c  --------------------------------------------------------------------------
       subroutine bsplvbfn (t, norder, x, left, biatx)
       implicit real*8(a-h, o-z)
-      dimension biatx(1), t(1), deltal(20), deltar(20)
+      dimension biatx(*), t(*), deltal(20), deltar(20)
 c
       j = 1
       biatx(1) = 1.
@@ -734,7 +734,7 @@ c  Y  ...  sequence to be differenced
 c
       subroutine gdifffn (n, norder, x, y, wk, c)
       implicit real*8(a-h,o-z)
-      dimension x(1), y(1), wk(1), c(1) 
+      dimension x(*), y(*), wk(*), c(*) 
 c
       nordp1 = norder + 1
       do i=1,n-norder
@@ -895,7 +895,7 @@ c          resulting N vector is Y - lambda*G W C
 c
       subroutine gcfn (n, norder, x, w, cvec, y, lambda, wk, c)
       implicit real*8(a-h,o-z)
-      dimension x(1), w(1), cvec(1), y(1), c(1), wk(1)
+      dimension x(*), w(*), cvec(*), y(*), c(*), wk(*)
       real*8 lambda
 c
       nordp1 = norder + 1
@@ -923,7 +923,7 @@ c  IER  ...  error return
 c
       subroutine bdinvspl (n, m, x, ier)
       implicit real*8 (a-h,o-z)
-      dimension x(n,1)
+      dimension x(n,*)
 c
 c  check for zero diagonal entries
 c
@@ -979,8 +979,8 @@ c  ---------------------------------------------------------------------------
      1                gcv, cv, df, lambda, method, work, tol, ier)
       implicit real*8(a-h,o-z)
       parameter (XDN = 1d-10, XUP = 3)
-      dimension xvec(1), wvec(1), yvec(n,nvar), yhat(n,nvar), work(1) 
-      real*8 lambda, lev(1)
+      dimension xvec(*), wvec(*), yvec(n,nvar), yhat(n,nvar), work(*) 
+      real*8 lambda, lev(*)
 c
       targdf   = df
       nmnorder = n - norder
@@ -1178,7 +1178,7 @@ c
       subroutine splifit (n, narg, nvar, norder, nderiv, x, y, xarg, dy,  
      1                    work, ier)
       implicit real*8 (a-h,o-z)
-      dimension x(n), y(n,1), xarg(narg), dy(narg,1), work(1)
+      dimension x(n), y(n,*), xarg(narg), dy(narg,*), work(*)
 c
       ier    = 0
 c
@@ -1245,7 +1245,7 @@ c
 c  --------------------------------------------------------------------------
       subroutine splint ( x, y, t, n, k, q, bcoef, iflag )
 c
-      real*8 bcoef(n), y(n), q(1), t(1), x(n), xi 
+      real*8 bcoef(n), y(n), q(*), t(*), x(n), xi 
 c
       np1   = n + 1
       km1   = k - 1
@@ -1418,7 +1418,7 @@ c  -------------------------------------------------------------------------
 c
       parameter (jmax = 20)
       integer index,jhigh,left,   i,j,jp1
-      real*8 biatx(jhigh), t(1), x, deltal(jmax), deltar(jmax), 
+      real*8 biatx(jhigh), t(*), x, deltal(jmax), deltar(jmax), 
      1       saved, term
 c
       data j/1/
@@ -1448,7 +1448,7 @@ c  --------------------------------------------------------------------------
       subroutine dpbvalue ( t, bcoef, n, k, x, jderiv, fofx )
 c
       parameter (kmax = 20)
-      real*8 bcoef(n), t(1), x,  aj(20), dl(20), dr(20), fkmj, fofx
+      real*8 bcoef(n), t(*), x,  aj(20), dl(20), dr(20), fkmj, fofx
 c
       fofx = 0.
       if (jderiv .ge. k) return
