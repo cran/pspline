@@ -61,7 +61,8 @@ smooth.Pspline <- function(x, y, w=rep(1, length(x)), norder=2,
               as.double(gcv),     as.double(cv),     as.double(df),
               as.double(spar),    as.double(dfmax),
               as.double(work),    as.integer(method),
-              as.integer(irerun), as.integer(ier) )
+              as.integer(irerun), as.integer(ier),
+                     PACKAGE="pspline")
 
   ier <- result[[17]]
   if (ier == 1) stop ("N < 2*NORDER + 1")
@@ -109,7 +110,8 @@ predict.smooth.Pspline <- function(object, xarg, nderiv = 0, ...) {
                      as.integer(nvar), as.integer(norder), as.integer(nderiv),
                      as.double(x),     as.double(ysmth),
                      as.double(xarg),  as.double(dy),
-                     as.double(work),  as.integer(ier) )
+                     as.double(work),  as.integer(ier),
+                     PACKAGE="pspline")
 
 
   ier <- result[[11]]
