@@ -81,7 +81,6 @@ and constants.  This object contains the information necessary to evaluate
 the smoothing spline or one of its derivatives at arbitrary argument
 values using \code{predict.smooth.Pspline}.  The components of the returned
 list are
-}
 \item{norder}{
 the order of the spline  
 }
