@@ -1,0 +1,6 @@
+1.0-2 98/11/23
+	Altered order of statements in subroutine fmm in Pspline.f to
+	satisfy g77, which clearly does not know its Fortran.
+
+	In subroutine hmatfn clear dimensions * not 1 to shut up g77.
+
