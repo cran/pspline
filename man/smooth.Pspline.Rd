@@ -1,20 +1,29 @@
 \name{smooth.Pspline}
 \alias{smooth.Pspline}
+\alias{lines.smooth.Pspline}
+\alias{plot.smooth.Pspline}
+\alias{print.smooth.Pspline}
+\alias{sm.spline}
 \title{
 Fit a Polynomial Smoothing Spline of Arbitrary Order
 }
 \description{
-Returns an object of class \code{smooth.Pspline} which is a natural 
+Returns an object of class \code{"smooth.Pspline"} which is a natural 
 polynomial smooth of the input data of order fixed by the user.
 }
 \usage{
 smooth.Pspline(x, y, w=rep(1, length(x)), norder=2, df=norder + 2, 
                spar=0, method=1)
+sm.spline(x, y, w=rep(1, length(x)), cv=F, ...)
 }
 \arguments{
 \item{x}{
 values of the predictor variable.  These must be strictly increasing,
 and there must be at least \code{2*norder + 1} of them.
+
+\code{sm.spline} provides a simplified interface, in which the \code{x}
+values can be unsorted, or a list with components \code{"x"} and
+\code{"y"} or a two-column matrix or a complex vector.
 }
 \item{y}{
 one or more sets of response variable values.  If there is one
@@ -24,7 +33,8 @@ columns equal to the number of variables.
 }
 \item{w}{
 vector of positive weights for smoothing of the same length as \code{x}.
-If measurements at different values of \code{x} have different variances, \code{w}
+If measurements at different values of \code{x} have different
+variances, \code{w}
 should be inversely proportional to the variances.  The default is
 that all weights are one.
 }
@@ -45,6 +55,8 @@ the usual smoothing parameter for smoothing splines, which is the
 coefficient of the integrated squared derivative of order \code{norder}.
 \code{spar} controls the amount of smoothing if \code{method = 1}.
 }
+\item{cv}{logical: should ordinary cross-validation be used (true) or
+  generalized cross-validation.}
 \item{method}{
 the method for controlling the amount of smoothing.  \code{method = 1} uses
 the value supplied for \code{spar}.  \code{method = 2} adjusts \code{spar} so that the
@@ -54,6 +66,9 @@ that the generalized cross-validation criterion is minimized.  `method
 minimized.  If \code{method = 3} or \code{method = 4}, \code{spar} defines the initial
 value for the minimization algorithm if positive; otherwise an
 internally generated value is used.
+
+\code{sm.spline} chooses this automatically based on the supplied values
+and that of \code{cv}.
 }
 \value{
 an object of class \code{"smooth.Pspline"} is returned, consisting of the fitted
@@ -118,7 +133,15 @@ Heckman, N. and Ramsay, J. O. (1996) Spline smoothing with model based
 penalties.  McGill University, unpublished manuscript.
 }
 \seealso{
-\code{\link{predict.smooth.Pspline}}, \code{\link{plot.smooth.Pspline}}
+\code{\link{predict.smooth.Pspline}}, \code{\link[modreg]{smooth.spline}}
+}
+\examples{
+data(cars)
+attach(cars)
+plot(speed, dist, main = "data(cars)  &  smoothing splines")
+cars.spl <- sm.spline(speed, dist)
+cars.spl
+lines(cars.spl, col = "blue")
+lines(sm.spline(speed, dist, df=10), lty=2, col = "red")
 }
 \keyword{smooth}
-% Converted by Sd2Rd version 0.3-1.

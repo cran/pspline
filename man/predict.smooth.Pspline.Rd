@@ -44,7 +44,15 @@ Heckman, N. and Ramsay, J. O. (1996) Spline smoothing with model based
 penalties.  McGill University, unpublished manuscript.
 }
 \seealso{
-\code{\link{predict.smooth.Pspline}}, \code{\link{plot.smooth.Pspline}}
+\code{\link{smooth.Pspline}}
+}
+\examples{
+example(smooth.Pspline)
+## smoother line is given by
+xx <- seq(4, 25, length=100)
+lines(xx, predict(sm.spline(speed, dist, df=5), xx), col = "red")
+## add plots of derivatives
+lines(xx, 10*predict(sm.spline(speed, dist), xx, 1), col = "blue")
+lines(xx, 100*predict(sm.spline(speed, dist), xx, 2), col = "green")
 }
 \keyword{smooth}
-% Converted by Sd2Rd version 0.3-1.
