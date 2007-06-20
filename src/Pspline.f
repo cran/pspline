@@ -1318,7 +1318,9 @@ c
       middle = nbandu + 1
 c                         w(middle,.) contains the main diagonal of  a .
       nrowm1 = nrow - 1
-      if (nrowm1)                       999,900,1
+c      if (nrowm1)                       999,900,1
+      if (nrowm1 .eq. 0)                go to 900
+      if (nrowm1 .lt. 0)                go to 999
     1 if (nbandl .gt. 0)                go to 10
 c                a is upper triangular. check that diagonal is nonzero .
       do i=1,nrowm1

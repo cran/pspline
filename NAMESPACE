@@ -1,0 +1,8 @@
+useDynLib(pspline)
+
+export(sm.spline, smooth.Pspline)
+
+S3method(lines, smooth.Pspline)
+S3method(plot, smooth.Pspline)
+S3method(predict, smooth.Pspline)
+S3method(print, smooth.Pspline)
