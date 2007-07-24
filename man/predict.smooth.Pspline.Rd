@@ -4,43 +4,38 @@
 Smoothing Spline of Arbitrary Order at New Data
 }
 \description{
-Uses an object of class \code{"smooth.Pspline"} to evaluate a polynomial smoothing
-spline of arbitrary order or one of its derivatives at new argument values.
+  Uses an object of class \code{"smooth.Pspline"} to evaluate a
+  polynomial smoothing spline of arbitrary order or one of its
+  derivatives at new argument values.
 }
 \usage{
-predict.smooth.Pspline(object, xarg, nderiv=0, ...)
+\method{predict}{smooth.Pspline}(object, xarg, nderiv = 0, ...)
 }
 \arguments{
-\item{object}{
-a fitted \code{smooth.Pspline} object.
-}
-\item{xarg}{
-the argument values at which the spline or its derivative is to be
-evaluated.
-}
-\item{nderiv}{
-  the order of the derivative required -- default is 0, the function
-  itself.
-}
-\item{\dots}{further arguments passed to or from other methods.}
+  \item{object}{a fitted \code{smooth.Pspline} object.}
+  \item{xarg}{the argument values at which the spline or its derivative
+    is to be evaluated.}
+  \item{nderiv}{the order of the derivative required -- the default is 0,
+    the function itself.}
+  \item{\dots}{further arguments passed to or from other methods.}
 }
 \value{
-a list with components \code{xarg} and \code{dy}; the \code{xarg} component is identical
-to the input \code{xarg} sequence, the \code{dy} component is the evaluated derivative
-of order \code{deriv}. 
+  A list with components \code{xarg} and \code{dy}; the \code{xarg}
+  component is identical to the input \code{xarg} sequence, the
+  \code{dy} component is the evaluated derivative of order \code{deriv}.
 }
 \details{
-The method produces results similar to function \code{predict.smooth.spline}, but
-the smoothing function is a natural smoothing spline rather than a B-spline
-smooth, and the order of the spline can be chosen freely, where order
-in this case means the order of the derivative that is penalized.  
-\code{smooth.spline} penalizes the second derivative, and consequently only
-derivatives or order 0 or 1 are useful, but because \code{smooth.Pspline}
-penalizes a derivative of order m, derivatives up to order m-1 are useful.
-The general recommendation is to penalize the derivative two beyond the
-highest order derivative to be evaluated.
-
-
+  The method produces results similar to function the \code{predict}
+  method for \code{\link{smooth.spline}}, but the smoothing function is
+  a natural smoothing spline rather than a B-spline smooth, and the
+  order of the spline can be chosen freely, where order in this case
+  means the order of the derivative that is
+  penalized. \code{smooth.spline} penalizes the second derivative, and
+  consequently only derivatives or order 0 or 1 are useful, but because
+  \code{\link{smooth.Pspline}} penalizes a derivative of order m,
+  derivatives up to order m-1 are useful. The general recommendation is
+  to penalize the derivative two beyond the highest order derivative to
+  be evaluated.
 }
 \references{
 Heckman, N. and Ramsay, J. O. (1996) Spline smoothing with model based
