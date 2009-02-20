@@ -61,8 +61,8 @@ coefficient of the integrated squared derivative of order \code{norder}.
 the method for controlling the amount of smoothing.  \code{method = 1} uses
 the value supplied for \code{spar}.  \code{method = 2} adjusts \code{spar} so that the
 degrees of freedom is equal to \code{df}.  \code{method = 3} adjusts \code{spar} so
-that the generalized cross-validation criterion is minimized.  `method
-= 4' adjusts \code{spar} so that the ordinary cross-validation criterion is
+that the generalized cross-validation criterion is minimized.
+\code{method = 4} adjusts \code{spar} so that the ordinary cross-validation criterion is
 minimized.  If \code{method = 3} or \code{method = 4}, \code{spar} defines the initial
 value for the minimization algorithm if positive; otherwise an
 internally generated value is used.

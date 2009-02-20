@@ -1,7 +1,7 @@
 c   ------------------------------------------------------------------------
 c  PSPLINE ...  an O(n) spline smoother with penalty on D^m
 c     This version can save intermediate results for reruns with new
-c     values of smoothing parameter LAMBDA and can compute the 
+c     values of smoothing parameter LAMBDA and can compute the
 c     GCV, CV, and DF criteria
 c
 c  This program sets up the necessary two band-structured matrices,
@@ -17,12 +17,12 @@ c  W        ...  array of positive weights of length N
 c  Y        ...  matrix of values to be smoothed of dimension N by NVAR
 c  YHAT     ...  matrix of values of    smooths  of dimension N by NVAR
 c  LEV      ...  array of N leverage values
-c  GCV      ...  output value of the GCV criterion  
-c  CV       ...  output value of the CV  criterion  
-c  DF       ...  output value of the  DF criterion  
+c  GCV      ...  output value of the GCV criterion
+c  CV       ...  output value of the CV  criterion
+c  DF       ...  output value of the  DF criterion
 c  LAMBDA   ...  penalty parameter
 c  DFMAX    ...  largest tolerated degrees of freedom
-c  WORK     ...  working storage array of length at least 
+c  WORK     ...  working storage array of length at least
 c                  (N-NORDER)*(3*NORDER+2)+N
 c
 c            NB:  if the data are to be re-smoothed with a different
@@ -34,12 +34,12 @@ c            1  ...  fixed value of LAMBDA
 c            2  ...  fixed value of DF
 c            3  ...  LAMBDA optimizes GCV criterion
 c            4  ...  LAMBDA optimizes  CV criterion
-c  IRERUN  ... if nonzero, assume that a previous call has already 
+c  IRERUN  ... if nonzero, assume that a previous call has already
 c             computed arrays H and GtWG
 c  IER     ...  error return:
 c            0 ... no error
 c            1 ... N < 2*NORDER + 1
-c            2 ... NORDER out of permissible range: [1,10] 
+c            2 ... NORDER out of permissible range: [1,10]
 c            3 ... NVAR < 1
 c            4 ... LAMBDA negative
 c            5 ... X not strictly increasing
@@ -51,14 +51,14 @@ c
 c  See also subroutine SPLIFIT below that evaluates a spline smoothing
 c  function or one of its derivatives at user-specified argument values.
 c
-      subroutine pspline (n, nvar, norder, 
+      subroutine pspline (n, nvar, norder,
      1                x, w, y, yhat, lev, gcv, cv, df,
      2                lambda, dfmax, work, method, irerun, ier)
-      implicit real*8(a-h,o-z)
+      implicit double precision(a-h,o-z)
       parameter (NORDLIM = 10)
-      dimension x(n), w(n), y(n,nvar), yhat(n,nvar), work(*), 
+      dimension x(n), w(n), y(n,nvar), yhat(n,nvar), work(*),
      1          wk1(121), wk2(121)
-      real*8 lambda, lev(n)
+      double precision lambda, lev(n)
       logical spcwrd
       data eps /1e-7/, tol/1e-3/
 c
@@ -76,7 +76,7 @@ c
         ier = 3
         return
       endif
-      if (lambda .lt. 0.0) then
+      if (lambda .lt. 0d0) then
         ier = 4
         return
       endif
@@ -85,15 +85,15 @@ c  Check for x strictly increasing, and also for x being equally spaced.
 c  It might save time if this were done prior to calling SPLGCV.
 c
       range = x(n) - x(1)
-      delta = range/float(n-1)
+      delta = range/dble(n-1)
       spcwrd = .true.
       critrn = range*eps
       do i=1,n
-        if (w(i) .le. 0.0) then
+        if (w(i) .le. 0d0) then
           ier = 6
         endif
         xi = x(i)
-        if (spcwrd .and. i .gt. 1 .and. 
+        if (spcwrd .and. i .gt. 1 .and.
      1      dabs(xi - xim1 - delta) .gt. critrn) spcwrd = .false.
         if (i .ge. norder .and. xi .le. x(i-norder+1)) then
           ier = 5
@@ -128,7 +128,7 @@ c
 c
 c  ********************  call SPLCAL  **************************
 c
-        call splcal (n, nvar, norder, x, w, y, yhat, lev, 
+        call splcal (n, nvar, norder, x, w, y, yhat, lev,
      1               gcv, cv, df, lambda, work, ier)
       else
 c
@@ -145,7 +145,7 @@ c
       endif
 c
       return
-      end     
+      end
 c   ------------------------------------------------------------------------
 c  SPLCAL ...  an O(n) spline smoother with penalty on D^m
 c         called by a driver routine that has already set up the two
@@ -156,14 +156,14 @@ c  NVAR    ...  number of sets of values to be smoothed
 c  NORDER  ...  order of derivative to be penalized (max. value = 19)
 c  X       ...  array of strictly increasing values of length N
 c  W       ...  array of positive weights of length N
-c  Y       ...  N by NVAR matrix of values to be smoothed 
-c  YHAT    ...  N by NVAR matrix of values of smooth 
+c  Y       ...  N by NVAR matrix of values to be smoothed
+c  YHAT    ...  N by NVAR matrix of values of smooth
 c  LEV     ...  array of N leverage values
-c  GCV     ...  output value of the GCV criterion  
+c  GCV     ...  output value of the GCV criterion
 c  CV      ...  output value of the CV criterion
-c  DF      ...  output value of the DF criterion  
+c  DF      ...  output value of the DF criterion
 c  LAMBDA  ...  penalty parameter
-c  WORK    ...  working storage array of length at least 
+c  WORK    ...  working storage array of length at least
 c                  3*N*(NORDER+1)
 c
 c            NB:  if the data are to be re-smoothed with a different
@@ -182,10 +182,10 @@ c                   at index J in the main loop
 c
       subroutine splcal (n, nvar, norder, x, w, y, yhat, lev,
      1                   gcv, cv, df, lambda, work, ier)
-      implicit real*8(a-h,o-z)
-      dimension x(n), w(n), y(n,nvar), yhat(n,nvar), work(*), 
+      implicit double precision(a-h,o-z)
+      dimension x(n), w(n), y(n,nvar), yhat(n,nvar), work(*),
      1          wk1(400), wk2(400)
-      real*8 lambda, lev(n)
+      double precision lambda, lev(n)
 c
 c  set up offset values for storing information in array WORK
 c
@@ -215,7 +215,7 @@ c
       end do
 c
 c  ********************  call LBANDMAT  **************************
-c    This step computes the rational Choleski decomposition of 
+c    This step computes the rational Choleski decomposition of
 c    the above band-structured matrix B
 c
       call ldltbdspl (nmnorder, nband, work(iboffset+1), ier)
@@ -226,7 +226,7 @@ c
       do ivar=1,nvar
 c
 c  ********************  call GDIFFFUN  **************************
-c    This step computes the divided difference values GtY of Y  
+c    This step computes the divided difference values GtY of Y
 c
         do i=1,n
           work(iyoffset+i) = y(i,ivar)
@@ -236,7 +236,7 @@ c
 c  ********************  call SOLVBD  **************************
 c    This step solves the equation  BC = GtY.  C replaces GtY
 c
-        call solvbdspl (nmnorder, nband, 1, work(iboffset+1), 
+        call solvbdspl (nmnorder, nband, 1, work(iboffset+1),
      1                  work(iyoffset+1), ier)
         if (ier .ne. 0) return
 c
@@ -246,7 +246,7 @@ c
         do i=1,n
           yhat(i,ivar) = y(i,ivar)
         end do
-        call gcfn (n, norder, x, w, work(iyoffset+1), yhat(1,ivar), 
+        call gcfn (n, norder, x, w, work(iyoffset+1), yhat(1,ivar),
      1             lambda, wk1, wk2)
       end do
 c
@@ -258,18 +258,18 @@ c
       call bdinvspl (nmnorder, norder, work(iboffset+1), ier)
 c     write (*,'(a)') ' B:'
 c     do i=1,nmnorder
-c       write (*,'(i3,5e12.4)') i, 
+c       write (*,'(i3,5e12.4)') i,
 c    1        (work((j-1)*nmnorder+i+iboffset),j=1,nband)
 c     end do
 c
 c  compute trace of hat matrix, SSE, CV, and GCV criteria
 c
       xn    = n
-      trace = 0.0 
-      sse   = 0.0
-      cv    = 0.0
+      trace = 0d0
+      sse   = 0d0
+      cv    = 0d0
       do i=1,n
-        sum = 0.0
+        sum = 0d0
         ldn = max(0, i-nmnorder)
         lup = min(norder, i-1)
         ml  = nmnorder*ldn
@@ -277,20 +277,20 @@ c
           sum = sum + work(ml+i-l+iqoffset)**2*work(i-l+iboffset)
           ml = ml + nmnorder
         end do
-        ml1 = nmnorder*ldn 
+        ml1 = nmnorder*ldn
         do l1=ldn,lup-1
           fac = work(ml1+i-l1+iqoffset)
-          ml2 = nmnorder*(l1+1) 
+          ml2 = nmnorder*(l1+1)
           do l2=l1+1,lup
-            sum = sum + 
-     1        2.0*fac*work(ml2+i-l2+iqoffset)*
+            sum = sum +
+     1        2d0*fac*work(ml2+i-l2+iqoffset)*
      2        work((l2-l1)*nmnorder+i-l1+iboffset)
             ml2 = ml2 + nmnorder
           end do
           ml1 = ml1 + nmnorder
         end do
         sum = sum*lambda*w(i)
-        lev(i) = 1.0 - sum
+        lev(i) = 1d0 - sum
         trace = trace + sum
         do ivar=1,nvar
           res = (y(i,ivar) - yhat(i,ivar))/w(i)
@@ -299,28 +299,28 @@ c
         end do
       end do
 c
-      gcv = (sse/xn)/(float(nvar)*trace/xn)**2
+      gcv = (sse/xn)/(dble(nvar)*trace/xn)**2
       cv  = cv/xn
       df  = xn - trace
 c
       return
-      end     
+      end
 c  ----------------------------------------------------------------------
 c  HMATFN ... computes matrix of inner products of Bspline functions
 c
 c  X      ...  strictly ascending sequence of values
 c  N      ...  length of the sequence
-c  NMO    ...  number of rows of band-structured matrix containing inner 
+c  NMO    ...  number of rows of band-structured matrix containing inner
 c               products:  NMO = N - NORDER.  Number of columns = NORDER
 c  NORDER ... order of differential operator in spline penalty term
 c             permissible values:  3  ...  4
-c  H      ...  band structured matrix with NORDER columns containing nonzero 
+c  H      ...  band structured matrix with NORDER columns containing nonzero
 c             inner products
 c  OUTIP  ...  scratch array of length NORDER*(NORDER+1)/2
 c  SPCWRD ...  logical flag indicating that X values are equally spaced
 c
       subroutine hmatfn (n, nmo, norder, x, h, outip, spcwrd)
-      implicit real*8(a-h,o-z)
+      implicit double precision(a-h,o-z)
       dimension x(*), h(nmo,*), outip(*)
       logical spcwrd
 c
@@ -328,7 +328,7 @@ c  clear array
 c
       do i=1,nmo
         do j=1,norder
-          h(i,j) = 0.0
+          h(i,j) = 0d0
         end do
       end do
 c
@@ -352,23 +352,23 @@ c  ----------------------------  order 2  --------------------------------
 c
       if (norder .eq. 2) then
         if (spcwrd) then
-          hi1 = (x(3) - x(1))/3.0d0
-          hi2 = (x(2) - x(1))/6.0d0
+          hi1 = (x(3) - x(1))/3d0
+          hi2 = (x(2) - x(1))/6d0
           do i=1,n-2
             h(i,1) = hi1
             if (i .eq. 1) then
-              h(i,2) = 0.0d0
+              h(i,2) = 0d0
             else
               h(i,2) = hi2
             endif
           end do
         else
           do i=1,n-2
-            h(i,1) = (x(i+2)-x(i))/3.0d0
+            h(i,1) = (x(i+2)-x(i))/3d0
             if (i .eq. 1) then
-              h(i,2) = 0.0d0
+              h(i,2) = 0d0
             else
-              h(i,2) = (x(i+1) - x(i))/6.0d0
+              h(i,2) = (x(i+1) - x(i))/6d0
             endif
           end do
         endif
@@ -384,7 +384,7 @@ c
           if (ier .ne. 0) then
             ier = ier + 10
             return
-          endif 
+          endif
           do i=1,n-1
             m = 0
             do j=1,norder
@@ -399,7 +399,7 @@ c
               end do
             end do
           end do
-        else 
+        else
           do i=1,n-1
             call splipfn (n, x, i, norder, outip, ier)
             if (ier .ne. 0) then
@@ -427,7 +427,7 @@ c
 c  ----------------------------------------------------------------------
 c  GTWGFN ... computes cross-product of divided difference coefficients
 c               with respect to x and weights w
-c               That is, computes G'WG where G is N by N-NORDER differencing 
+c               That is, computes G'WG where G is N by N-NORDER differencing
 c               matrix and W is a diagonal weight matrix
 c
 c  N  ...  length of the sequence
@@ -442,7 +442,7 @@ c  C     ...  working array of length NORDER*NORDER
 c  SPCWRD ..  logical flag indicating equal spacing of the X values
 c
       subroutine gtwgfn (n, norder, x, w, work, wk, c, spcwrd)
-      implicit real*8(a-h,o-z)
+      implicit double precision(a-h,o-z)
       dimension x(*), w(*), work(*), c(20,*), wk(*)
       logical spcwrd
 c
@@ -463,7 +463,7 @@ c
           end do
           mj = i
           do j=1,min(i,nordp1)
-            sum = 0.0d0
+            sum = 0d0
             do l=1,norder+2-j
               sum = sum + c(l,1)*c(l+j-1,1)*w(i+l-1)
             end do
@@ -481,7 +481,7 @@ c
           end do
           mj = i
           do j=1,min(i,nordp1)
-            sum = 0.0d0
+            sum = 0d0
             do l=1,norder+2-j
               sum = sum + c(l,1)*c(l+j-1,j)*w(i+l-1)
             end do
@@ -501,24 +501,24 @@ c
       mj = nmnorder
       do j=1,norder
         do i=1,j
-          work(mj+i+igoffset) = 0.0
+          work(mj+i+igoffset) = 0d0
         end do
         mj = mj + nmnorder
       end do
 c
 c     write (*,'(a)') ' H:'
 c     do i=1,nmnorder
-c       write (*,'(i3,5f12.4)') i, 
+c       write (*,'(i3,5f12.4)') i,
 c    1        (work((j-1)*nmnorder+i),j=1,norder)
 c     end do
 c     write (*,'(a)') ' GtG:'
 c     do i=1,nmnorder
-c       write (*,'(i3,5e12.4)') i, 
+c       write (*,'(i3,5e12.4)') i,
 c    1        (work((j-1)*nmnorder+i+igoffset),j=1,nordp1)
 c     end do
 c     write (*,'(a)') ' Q:'
 c     do i=1,nmnorder
-c       write (*,'(i3,5f12.4)') i, 
+c       write (*,'(i3,5f12.4)') i,
 c    1        (work((j-1)*nmnorder+i+iqoffset),j=1,nordp1)
 c     end do
 c
@@ -526,17 +526,17 @@ c
       end
 c  ---------------------------------------------------------------------------
 c  SPLIP ...  Computes the inner product of order M bspline functions that
-c              are nonzero over an interval. 
-c              For example, if the lower bound is the 
+c              are nonzero over an interval.
+c              For example, if the lower bound is the
 c              knot with index 0, and the order is 4,
 c              the active spline functions are:
 c              B_{i4}, B_{i-1,4}, B_{i-2,4}, and B_{i-3,4}
 c              The inner products are turned in array OUTIP in the order
-c              (B_{i4},   B_{i4}),      (B_{i4},   B_{i-1,4}),    
-c              (B_{i4},   B_{i-2,4}),   (B_{i4},   B_{i-3,4}),    
-c              (B_{i-1,4},B_{i-1,4}),   (B_{i-1,4},B_{i-2,4}), 
+c              (B_{i4},   B_{i4}),      (B_{i4},   B_{i-1,4}),
+c              (B_{i4},   B_{i-2,4}),   (B_{i4},   B_{i-3,4}),
+c              (B_{i-1,4},B_{i-1,4}),   (B_{i-1,4},B_{i-2,4}),
 c              (B_{i-1,4},B_{i-3,4}),   (B_{i-2,3},B_{i-2,3}),
-c              (B_{i-2,4},B_{i-3,4}),   (B_{i-3,4},B_{i-3,4})  
+c              (B_{i-2,4},B_{i-3,4}),   (B_{i-3,4},B_{i-3,4})
 c
 c  N  ...  length of knot sequence
 c  X  ...  strictly increasing sequence of N knot values
@@ -546,22 +546,22 @@ c  OUTIP ...  array of length NORDER*(NORDER+1)/2 for returning inner products
 c  IER ... error return
 c
       subroutine splipfn (n, x, index, norder, outip, ier)
-      implicit real*8 (a-h,o-z)
+      implicit double precision (a-h,o-z)
       dimension x(*), outip(*), quadpt(20), quadwt(20), biatx(20)
-      real*8 knot(40)
+      double precision knot(40)
 c
       ier = 0
       if (index .lt. 1 .or. index .ge. n) then
         ier = 1
         return
       endif
-c  
+c
 c  generate quadrature points and weights for Gauss-Legendre quadrature
 c
       call gaulegfn (norder, x(index), x(index+1), quadpt, quadwt)
 c
       do m=1,norder*(norder+1)/2
-        outip(m) = 0.0
+        outip(m) = 0d0
       end do
 c
 c  first compute local knot sequence from X
@@ -573,7 +573,7 @@ c
           knot(norder-i) = x(index-i)
         else
           knot(norder-i) = x(1)
-        endif     
+        endif
         if (index+i+1 .le. n) then
           knot(norder+i+1) = x(index+i+1)
         else
@@ -590,7 +590,7 @@ c
         do j=1,norder
           do k=j,norder
             m = m + 1
-            outip(m) = outip(m) 
+            outip(m) = outip(m)
      1               + wi*biatx(norder-j+1)*biatx(norder-k+1)
           end do
         end do
@@ -611,31 +611,31 @@ c  QUADPT ...  quadrature points or abscissas
 c  QUADWT ...  quadrature weights
 c
       subroutine gaulegfn (n, a, b, quadpt, quadwt)
-      implicit real*8 (a-h,o-z)
+      implicit double precision (a-h,o-z)
       parameter (EPS=3.0D-14, PI=3.141592654D0)
       dimension quadpt(n), quadwt(n)
 c
       dn = n
       m  = (n + 1)/2
-      xm = (a + b)/2.0d0
-      x1 = (b - a)/2.0d0
+      xm = (a + b)/2d0
+      x1 = (b - a)/2d0
       do i=1,m
         z = dcos(PI*(dble(i) - 0.25d0)/(dn + 0.5d0))
-   10   p1 = 1.0d0
-        p2 = 0.0d0
+   10   p1 = 1d0
+        p2 = 0d0
         do j=1,n
           dj = j
           p3 = p2
           p2 = p1
-          p1 = ((2.0d0*dj-1.0d0)*z*p2 - (dj-1.0d0)*p3)/dj
+          p1 = ((2d0*dj-1d0)*z*p2 - (dj-1d0)*p3)/dj
         end do
-        pp = dn*(z*p1-p2)/(z*z-1.0d0)
+        pp = dn*(z*p1-p2)/(z*z-1d0)
         z1 = z
         z  = z1 - p1/pp
         if (dabs(z - z1) .gt. EPS) go to 10
         quadpt(    i) = xm - x1*z
         quadpt(n+1-i) = xm + x1*z
-        quadwt(    i) = 2.0d0*x1/((1.0d0-z*z)*pp*pp)
+        quadwt(    i) = 2d0*x1/((1d0-z*z)*pp*pp)
         quadwt(n+1-i) = quadwt(i)
       end do
 c
@@ -643,17 +643,17 @@ c
       end
 c  --------------------------------------------------------------------------
       subroutine bsplvbfn (t, norder, x, left, biatx)
-      implicit real*8(a-h, o-z)
+      implicit double precision(a-h, o-z)
       dimension biatx(*), t(*), deltal(20), deltar(20)
 c
       j = 1
-      biatx(1) = 1.
+      biatx(1) = 1d0
       if (j .ge. norder) return
 c
    10 jp1 = j + 1
       deltar(j) = t(left+j) - x
       deltal(j) = x - t(left+1-j)
-      saved = 0.
+      saved = 0d0
       do i=1,j
          term = biatx(i)/(deltar(i) + deltal(jp1-i))
          biatx(i) = saved + deltar(i)*term
@@ -663,19 +663,19 @@ c
       j = jp1
       if (j .lt. norder) go to 10
 c
-      end 
+      end
 c  -------------------------------------------------------------------
-c  LDLTBD ...  computes rational Choleski factorization 
+c  LDLTBD ...  computes rational Choleski factorization
 c            A = LDL' for a banded matrix A
 c
 c  N  ... order of matrix
 c  K  ... number of off-diagonal bands + 1
-c  ABAND  ... N by K matrix ... diagonal in 1st column, and  
-c         column j contains the N - j + 1 nonzero elements 
+c  ABAND  ... N by K matrix ... diagonal in 1st column, and
+c         column j contains the N - j + 1 nonzero elements
 c         of off-diagonal band j starting in row j
-c         On exit, the first column contains the values of D, and 
+c         On exit, the first column contains the values of D, and
 c         remaining columns contain the off-diagonal values of L
-c  IER  ...  error return:  0 means no error, 
+c  IER  ...  error return:  0 means no error,
 c                           1 means N < 1
 c                           2 means K < 1
 c                           3 means K > N
@@ -683,21 +683,21 @@ c                          -J means zero or negative element for D found on
 c                             loop J
 c
       subroutine ldltbdspl (n, k, aband, ier)
-      real*8 aband(n,k), vj, sum
+      double precision aband(n,k), vj, sum
 c
       do j=1,n
         ist = max (1, j - k + 1)
         do i=ist,j-1
-          jmi = j - i 
+          jmi = j - i
           aband(jmi,k) = aband(j,jmi+1)*aband(i,1)
         end do
         sum = aband(j,1)
         do i=ist,j-1
-          jmi = j - i 
+          jmi = j - i
           sum = sum - aband(j,jmi+1)*aband(jmi,k)
         end do
         vj = sum
-        if (vj .le. 0.0d0) then
+        if (vj .le. 0d0) then
           ier = -j
           return
         endif
@@ -723,7 +723,7 @@ c
       end
 c  ----------------------------------------------------------------------
 c  GDIFFFN ... computes differences for a vector y with respect to x
-c               That is, computes G'y where G is N by N-NORDER differencing 
+c               That is, computes G'y where G is N by N-NORDER differencing
 c               matrix.
 c
 c  N  ...  length of the sequence
@@ -733,8 +733,8 @@ c  X  ...  strictly ascending sequence of values
 c  Y  ...  sequence to be differenced
 c
       subroutine gdifffn (n, norder, x, y, wk, c)
-      implicit real*8(a-h,o-z)
-      dimension x(*), y(*), wk(*), c(*) 
+      implicit double precision(a-h,o-z)
+      dimension x(*), y(*), wk(*), c(*)
 c
       nordp1 = norder + 1
       do i=1,n-norder
@@ -749,15 +749,15 @@ c
       return
       end
 c  -------------------------------------------------------------------------
-c  DIVDIFFFN  ...  computes divided difference coefficients up to order N 
+c  DIVDIFFFN  ...  computes divided difference coefficients up to order N
 c          for argument value array of length N, N >= 2
 c
       subroutine divdifffn (n, x, c, wk)
-      implicit real*8 (a-h, o-z)
+      implicit double precision (a-h, o-z)
       dimension x(n), c(n), wk(n,n)
 c
       if (n .eq. 1) then
-        c(1) = 1.0
+        c(1) = 1d0
       endif
 c
 c  set up coefficients for order 2
@@ -765,14 +765,14 @@ c
       nm1 = n - 1
       do i=1,n
         do j=1,nm1
-          wk(i,j) = 0.0
+          wk(i,j) = 0d0
         end do
       end do
       do j=1,nm1
         dj1 = x(j+1) - x(j)
-        wk(j,j)   = -1.0/dj1
-        wk(j+1,j) =  1.0/dj1
-      end do       
+        wk(j,j)   = -1d0/dj1
+        wk(j+1,j) =  1d0/dj1
+      end do
 c
 c  recurse up to order n - 2
 c
@@ -784,7 +784,7 @@ c
           end do
         end do
       end do
-c        
+c
 c  return divided difference coefficients times final difference
 c
       do i=1,n
@@ -796,18 +796,18 @@ c
 c  -------------------------------------------------------------------
 c  SOLVBD ...  computes the solution to the equation
 c                Ax = y for a symmetric banded matrix A
-c            given the rational Choleski factorization  A = LDL'  
+c            given the rational Choleski factorization  A = LDL'
 c
 c  N  ... order of matrix
 c  K  ... number of off-diagonal bands + 1
 c  M  ... number of columns of right side array Y
-c  LBAND  ... N by K matrix ... D in 1st column, and  
+c  LBAND  ... N by K matrix ... D in 1st column, and
 c         column j contains the N - j + 1 nonzero elements of lower triangular
 c         Choleski factor L
 c         off-diagonal band j starting in row j
 c  Y  ... N by M array containing right side.  On return it contains
 c         the solutions
-c  IER  ...  error return:  0 means no error, 
+c  IER  ...  error return:  0 means no error,
 c                           1 means N < 1
 c                           2 means K < 1
 c                           3 means K > N
@@ -815,7 +815,7 @@ c                           J + 10 means zero or negative element for D found on
 c                             loop J
 c
       subroutine solvbdspl (n, k, m, lband, y, ier)
-      real*8 lband(n,k), y(n,m), sum
+      double precision lband(n,k), y(n,m), sum
 c
 c  check arguments
 c
@@ -836,11 +836,11 @@ c
         return
       endif
       do j=1,n
-        if (lband(j,1) .le. 0.0d0) then
+        if (lband(j,1) .le. 0d0) then
           ier = j + 10
           return
         endif
-      end do 
+      end do
 c
 c  Solve  Lu = y
 c
@@ -877,11 +877,11 @@ c
           y(jcomp,jrs) = sum
         end do
       end do
-c    
+c
       return
       end
 c  ----------------------------------------------------------------------
-c  GCFN ... computes  GC where G is N by N-NORDER differencing 
+c  GCFN ... computes  GC where G is N by N-NORDER differencing
 c               matrix and C is a vector of length N-NORDER
 c
 c  N      ...  length of the sequence
@@ -894,9 +894,9 @@ c  y      ...  vector of length N containing values to be smoothed:
 c          resulting N vector is Y - lambda*G W C
 c
       subroutine gcfn (n, norder, x, w, cvec, y, lambda, wk, c)
-      implicit real*8(a-h,o-z)
+      implicit double precision(a-h,o-z)
       dimension x(*), w(*), cvec(*), y(*), c(*), wk(*)
-      real*8 lambda
+      double precision lambda
 c
       nordp1 = norder + 1
       do i=1,n-norder
@@ -922,13 +922,13 @@ c  X  ...  band-structured matrix containing Choleski factors
 c  IER  ...  error return
 c
       subroutine bdinvspl (n, m, x, ier)
-      implicit real*8 (a-h,o-z)
+      implicit double precision (a-h,o-z)
       dimension x(n,*)
 c
 c  check for zero diagonal entries
 c
       do i=1,n
-         if (x(i,1) .le. 0.0d0) then
+         if (x(i,1) .le. 0d0) then
            ier = 10 + i
            return
          endif
@@ -936,11 +936,10 @@ c
 c
       mp1  = m + 1
       ilim = 1
-      x(n,1) = 1.0d0/x(n,1)
+      x(n,1) = 1d0/x(n,1)
       do i=n-1,1,-1
         do l=1,ilim
-          sum = 0.0d0
-          lp1 = l + 1
+          sum = 0d0
           ipl = i + l
           do k=1,ilim
             kp1 = k + 1
@@ -955,7 +954,7 @@ c
           end do
           x(l,mp1) = sum
         end do
-        sum = 1.0d0/x(i,1)
+        sum = 1d0/x(i,1)
         do l=1,ilim
           sum = sum - x(i+l,l+1)*x(l,mp1)
         end do
@@ -969,7 +968,7 @@ c
 c  clear upper triangle
 c
       do l=1,m
-        x(l,mp1) = 0.0d0
+        x(l,mp1) = 0d0
       end do
 c
       return
@@ -977,16 +976,16 @@ c
 c  ---------------------------------------------------------------------------
       subroutine fmm (n, nvar, norder, xvec, wvec, yvec, yhat, lev,
      1                gcv, cv, df, lambda, method, work, tol, ier)
-      implicit real*8(a-h,o-z)
+      implicit double precision(a-h,o-z)
       parameter (XDN = 1d-10, XUP = 3)
-      dimension xvec(*), wvec(*), yvec(n,nvar), yhat(n,nvar), work(*) 
-      real*8 lambda, lev(*)
+      dimension xvec(*), wvec(*), yvec(n,nvar), yhat(n,nvar), work(*)
+      double precision lambda, lev(*)
 c
       targdf   = df
       nmnorder = n - norder
       igoffset = nmnorder*norder
-      t1 = 0.0
-      t2 = 0.0
+      t1 = 0d0
+      t2 = 0d0
       do i=1,nmnorder
         t1 = t1 + work(i)
         t2 = t2 + work(igoffset+i)
@@ -1005,23 +1004,23 @@ c
       b = XUP
 c     v = a + 0.382*(b - a)
 c     write (*, '(a,e10.3)') ' LAMBDA =', lambda
-      if (lambda .le. 0.0) then
-        v = .75
+      if (lambda .le. 0d0) then
+        v = 0.75d0
       else
-        v = (2.0 + dlog(lambda/ratio)/2.772589)/6.0
+        v = (2d0 + dlog(lambda/ratio)/2.772589d0)/6d0
       endif
       w = v
       x = v
-      e = 0.0
-      lambda = ratio*dexp(2.772589*(6.0*x - 2.0))
+      e = 0d0
+      lambda = ratio*dexp(2.772589d0*(6d0*x - 2d0))
 c     write (*, '(a,e10.3)') ' LAMBDA =', lambda
 c
 c  Call 1 to SPLCAL
 c
-      call splcal (n, nvar, norder, xvec, wvec, yvec, yhat, lev, 
+      call splcal (n, nvar, norder, xvec, wvec, yvec, yhat, lev,
      1             gcv, cv, df, lambda, work, ier)
       if (ier .ne. 0) return
-c     write (*,'(a, f10.5,e10.3,4f12.4)')  
+c     write (*,'(a, f10.5,e10.3,4f12.4)')
 c    1                   ' Call 1:', x, lambda, df, gcv, cv, fu
 c
       if (method .eq. 2) fx = (targdf-df)**2
@@ -1032,13 +1031,13 @@ c
 c
 c  --------------------  main loop starts here -------------------------
 c
-   20 xm   = 0.5*(a + b)
+   20 xm   = 0.5d0*(a + b)
       tol1 = eps*dabs(x) + tol/3d0
       tol2 = 2d0*tol1
 c
 c  check stopping criterion
 c
-      if (dabs(x - xm) .le. (tol2 - 0.5*(b - a))) go to 90
+      if (dabs(x - xm) .le. (tol2 - 0.5d0*(b - a))) go to 90
 c
 c is golden-section necessary?
 c
@@ -1049,15 +1048,15 @@ c
       r = (x - w)*(fx - fv)
       q = (x - v)*(fx - fw)
       p = (x - v)*q - (x - w)*r
-      q = 2.0*(q - r)
-      if (q .gt. 0.0) p = -p
+      q = 2d0*(q - r)
+      if (q .gt. 0d0) p = -p
       q =  dabs(q)
       r = e
       e = d
 c
 c  is parabola acceptable?
 c
-   30 if (dabs(p) .ge. dabs(0.5*q*r)) go to 40
+      if (dabs(p) .ge. dabs(0.5d0*q*r)) go to 40
       if (p .le. q*(a - x))           go to 40
       if (p .ge. q*(b - x))           go to 40
 c
@@ -1066,11 +1065,11 @@ c
       d = p/q
       u = x + d
 c
-c  f must not be evaluated too close to a or b 
+c  f must not be evaluated too close to a or b
 c
       if ((u - a) .lt. tol2 .or. b - u .lt. tol2) then
-        if (xm - x .ge. 0.0) then
-          d =  tol1 
+        if (xm - x .ge. 0d0) then
+          d =  tol1
         else
           d = -tol1
         endif
@@ -1081,30 +1080,30 @@ c  a golden-section step
 c
    40 if (x .ge. xm) e = a - x
       if (x .lt. xm) e = b - x
-      d = 0.382*e
+      d = 0.382d0*e
 c
 c  f must not be evaluated too close to x
 c
    50 if (dabs(d) .ge. tol1) then
         u = x + d
       else
-        if (d .ge. 0.0) then
-          u = x + tol1 
+        if (d .ge. 0d0) then
+          u = x + tol1
         else
-          u = x - tol1 
+          u = x - tol1
         endif
       endif
-      lambda = ratio*dexp(2.772589*(6.0*u - 2.0))
+      lambda = ratio*dexp(2.772589d0*(6d0*u - 2d0))
 c
 c  Call 2 to SPLCAL
 c
-      call splcal (n, nvar, norder, xvec, wvec, yvec, yhat, lev, 
+      call splcal (n, nvar, norder, xvec, wvec, yvec, yhat, lev,
      1             gcv, cv, df, lambda, work, ier)
       if (ier .ne. 0) return
       if (method .eq. 2) fu = (targdf-df)**2
       if (method .eq. 3) fu = gcv
       if (method .eq. 4) fu = cv
-c     write (*,'(a, f10.5,e10.3,4f12.4)')  
+c     write (*,'(a, f10.5,e10.3,4f12.4)')
 c    1                   ' Call 2:', u, lambda, df, gcv, cv, fu
 c
 c  update  a, b, v, w, and x
@@ -1134,18 +1133,18 @@ c
       w  = u
       fw = fu
       go to 20
-c 
+c
    80 v  = u
       fv = fu
       go to 20
 c
 c  -------------------  end of main loop  ------------------------------
 c
-   90 continue 
+   90 continue
 c
-      return 
+      return
       end
- 
+
 c  -------------------------------------------------------------------------
 c  SPLIFIT ...  this subroutine inputs a strictly increasing sequence of
 c       arguments X, along with NVAR sets of function values Y, and
@@ -1162,11 +1161,11 @@ c  NORDER ... order of B-spline (degree + 1) (minimum value 1)
 c  NDERIV ... order of derivative (0 min, NORDER - 2 max)
 c  X      ... array of strictly increasing argument values
 c  Y      ... matrix of degree N by NVAR of function values at argument values X
-c  XARG   ... array length NARG of argument values at which the derivative 
+c  XARG   ... array length NARG of argument values at which the derivative
 c             values are to be computed
 c  DY     ... matrix of degree NARG by NVAR of returned derivative values
 c  WORK   ... working storage of length (2*NORDER-1)*N + NORDER
-c  IER    ...  error return: 
+c  IER    ...  error return:
 c               0 ... no error
 c               1 ... inappropriate value of N
 c               2 ... problem with knots detected in SPLINT
@@ -1175,9 +1174,9 @@ c               4 ... inappropriate value of NDERIV
 c               5 ... inappropriate value of NDEG
 c               6 ... X not strictly increasing
 c
-      subroutine splifit (n, narg, nvar, norder, nderiv, x, y, xarg, dy,  
+      subroutine splifit (n, narg, nvar, norder, nderiv, x, y, xarg, dy,
      1                    work, ier)
-      implicit real*8 (a-h,o-z)
+      implicit double precision (a-h,o-z)
       dimension x(n), y(n,*), xarg(narg), dy(narg,*), work(*)
 c
       ier    = 0
@@ -1227,7 +1226,7 @@ c
 c
 c  call SPLINT to get the coefficients for the interpolating bspline
 c
-        call splint ( x, y(1,ivar), work(itoff), n, norder, 
+        call splint ( x, y(1,ivar), work(itoff), n, norder,
      1                work(iqoff), work(iboff), iflag )
         ier = iflag - 1
         if (ier .ne. 0) return
@@ -1235,7 +1234,7 @@ c
 c  go through data computing value of derivative nderiv
 c
         do iarg=1,narg
-          call dpbvalue(work(itoff), work(iboff), n, norder, 
+          call dpbvalue(work(itoff), work(iboff), n, norder,
      1                  xarg(iarg), nderiv, dy(iarg,ivar))
         end do
       end do
@@ -1245,7 +1244,7 @@ c
 c  --------------------------------------------------------------------------
       subroutine splint ( x, y, t, n, k, q, bcoef, iflag )
 c
-      real*8 bcoef(n), y(n), q(*), t(*), x(n), xi 
+      double precision bcoef(n), y(n), q(*), t(*), x(n), xi
 c
       np1   = n + 1
       km1   = k - 1
@@ -1254,7 +1253,7 @@ c
       left  = k
       lenq  = n*(k+km1)
       do  i=1,lenq
-         q(i) = 0.
+         q(i) = 0d0
       end do
 c
 c  ***   loop over i to construct the  n  interpolation equations
@@ -1312,7 +1311,7 @@ c  ---------------------------------------------------------------------
 c
       integer iflag,nbandl,nbandu,nrow,nroww,   i,ipk,j,jmax,k,kmax
      *                                        ,middle,midmk,nrowm1
-      real*8 w(nroww,nrow), factor, pivot
+      double precision w(nroww,nrow), factor, pivot
 c
       iflag = 1
       middle = nbandu + 1
@@ -1321,10 +1320,10 @@ c                         w(middle,.) contains the main diagonal of  a .
 c      if (nrowm1)                       999,900,1
       if (nrowm1 .eq. 0)                go to 900
       if (nrowm1 .lt. 0)                go to 999
-    1 if (nbandl .gt. 0)                go to 10
+      if (nbandl .gt. 0)                go to 10
 c                a is upper triangular. check that diagonal is nonzero .
       do i=1,nrowm1
-         if (w(middle,i) .eq. 0.)       go to 999
+         if (w(middle,i) .eq. 0d0)       go to 999
       end do
                                         go to 900
    10 if (nbandu .le. 0) then
@@ -1332,7 +1331,7 @@ c              a is lower triangular. check that diagonal is nonzero and
 c                 divide each column by its diagonal .
         do i=1,nrowm1
            pivot = w(middle,i)
-           if(pivot .eq. 0.)              go to 999
+           if(pivot .eq. 0d0)              go to 999
            jmax = min0(nbandl, nrow - i)
            do j=1,jmax
               w(middle+j,i) = w(middle+j,i)/pivot
@@ -1345,7 +1344,7 @@ c        a  is not just a triangular matrix. construct lu factorization
       do i=1,nrowm1
 c                                  w(middle,i)  is pivot for i-th step .
          pivot = w(middle,i)
-         if (pivot .eq. 0.)             go to 999
+         if (pivot .eq. 0d0)             go to 999
 c                 jmax  is the number of (nonzero) entries in column  i
 c                     below the diagonal .
          jmax = min0(nbandl,nrow - i)
@@ -1368,7 +1367,7 @@ c                  (below row  i ) .
          end do
       end do
 c                                       check the last diagonal entry .
-  900 if (w(middle,nrow) .ne. 0.)       return
+  900 if (w(middle,nrow) .ne. 0d0)       return
   999 iflag = 2
                                         return
       end
@@ -1376,7 +1375,7 @@ c  ---------------------------------------------------------------------
       subroutine banslv ( w, nroww, nrow, nbandl, nbandu, b )
 c
       integer nbandl,nbandu,nrow,nroww,   i,j,jmax,middle,nrowm1
-      real*8 w(nroww,nrow),b(nrow)
+      double precision w(nroww,nrow),b(nrow)
 c
       middle = nbandu + 1
       if (nrow .eq. 1)                  go to 20
@@ -1403,7 +1402,7 @@ c                                a  is lower triangular .
         end do
         return
       endif
-      i = nrow    
+      i = nrow
    10    b(i) = b(i)/w(middle,i)
          jmax = min0(nbandu,i-1)
          do j=1,jmax
@@ -1420,21 +1419,21 @@ c  -------------------------------------------------------------------------
 c
       parameter (jmax = 20)
       integer index,jhigh,left,   i,j,jp1
-      real*8 biatx(jhigh), t(*), x, deltal(jmax), deltar(jmax), 
-     1       saved, term
+      double precision biatx(jhigh), t(*), x, deltal(jmax),
+     1     deltar(jmax), saved, term
 c
       data j/1/
-      save j,deltal,deltar 
+      save j,deltal,deltar
 c
                                         go to (10,20), index
    10 j = 1
-      biatx(1) = 1.
+      biatx(1) = 1d0
       if (j .ge. jhigh)                 go to 99
 c
    20    jp1 = j + 1
          deltar(j) = t(left+j) - x
          deltal(j) = x - t(left+1-j)
-         saved = 0.
+         saved = 0d0
          do i=1,j
             term = biatx(i)/(deltar(i) + deltal(jp1-i))
             biatx(i) = saved + deltar(i)*term
@@ -1449,10 +1448,10 @@ c
 c  --------------------------------------------------------------------------
       subroutine dpbvalue ( t, bcoef, n, k, x, jderiv, fofx )
 c
-      parameter (kmax = 20)
-      real*8 bcoef(n), t(*), x,  aj(20), dl(20), dr(20), fkmj, fofx
+      double precision bcoef(n), t(*), x,  aj(20), dl(20), dr(20),
+     1  fkmj, fofx
 c
-      fofx = 0.
+      fofx = 0.d0
       if (jderiv .ge. k) return
 c
       call dpinterv ( t, n+k, x, i, mflag )
@@ -1478,10 +1477,10 @@ c     to t(n+k) appropriately.
            dl(j) = x - t(ip1-j)
         end do
         do j=i,km1
-           aj(k-j) = 0.
+           aj(k-j) = 0d0
            dl(j)   = dl(i)
         end do
-      else    
+      else
         do j=1,km1
            dl(j) = x - t(ip1-j)
         end do
@@ -1495,7 +1494,7 @@ c
            dr(j) = t(i+j) - x
         end do
         do j=jcmax,km1
-           aj(j+1) = 0.
+           aj(j+1) = 0d0
            dr(j)   = dr(jcmax)
         end do
       else
@@ -1512,7 +1511,7 @@ c               *** difference the coefficients  jderiv  times.
       if (jderiv .gt. 0) then
         do j=1,jderiv
            kmj  = k-j
-           fkmj = float(kmj)
+           fkmj = dble(kmj)
            ilo  = kmj
            do jj=1,kmj
              aj(jj) = ((aj(jj+1) - aj(jj))/(dl(ilo) + dr(jj)))*fkmj
@@ -1524,7 +1523,7 @@ c
 c  *** compute value at  x  in (t(i),t(i+1)) of jderiv-th derivative,
 c     given its relevant b-spline coeffs in aj(1),...,aj(k-jderiv).
       if (jderiv .lt. km1) then
-        jdrvp1 = jderiv + 1  
+        jdrvp1 = jderiv + 1
         do j=jdrvp1,km1
            kmj = k-j
            ilo = kmj
@@ -1544,10 +1543,10 @@ c  --------------------------------------------------------------------------
       subroutine dpinterv ( xt, lxt, x, left, mflag )
 c
       integer left,lxt,mflag,   ihi,ilo,istep,middle
-      real*8 x,xt(lxt)
+      double precision x,xt(lxt)
 c
       data ilo /1/
-      save ilo  
+      save ilo
 c
       ihi = ilo + 1
       if (ihi .lt. lxt)                 go to 20
@@ -1602,6 +1601,6 @@ c**** set output and return.
       left = lxt
   111 if (left .eq. 1)                  return
 	  left = left - 1
-	  if (xt(left) .lt. xt(lxt))        return 			
+	  if (xt(left) .lt. xt(lxt))        return
                                             go to 111
       end

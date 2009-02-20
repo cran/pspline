@@ -1,3 +1,7 @@
+1.0-13 2009-02-20
+
+	Inprovements to Fortran based on ftncheck
+
 1.0-12 2007-07-24
 
 	Use markup in predict.smooth.Psline.Rd
