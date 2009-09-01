@@ -1,3 +1,7 @@
+1.0-14 2009-09-01
+
+	Remove link to obsolete package 'modreg'
+
 1.0-13 2009-02-20
 
 	Inprovements to Fortran based on ftncheck

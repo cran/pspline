@@ -136,7 +136,7 @@ Heckman, N. and Ramsay, J. O. (1996) Spline smoothing with model based
 penalties.  McGill University, unpublished manuscript.
 }
 \seealso{
-\code{\link{predict.smooth.Pspline}}, \code{\link[modreg]{smooth.spline}}
+\code{\link{predict.smooth.Pspline}}, \code{\link{smooth.spline}}
 }
 \examples{
 data(cars)
