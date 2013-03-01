@@ -1,0 +1,11 @@
+4b127cce0940c92bb265cc7dc137c709 *ChangeLog
+d8acd60d1a7a70d7d9cc329a1ff3df09 *DESCRIPTION
+68fcff984661ca49e8a161442aab15dc *INDEX
+c20a23139498d1adbdf33e1641039be7 *NAMESPACE
+a288cda4142cd32b09d8c0be39a60d87 *R/Pspline.q
+4369bfc715437628998fdae15a58a47b *R/sm.R
+d381442e6eeb2a4e5d62e7d395f2600b *man/predict.smooth.Pspline.Rd
+f67375df7a71ecc2c09b098ae45777e9 *man/smooth.Pspline.Rd
+c8985352fcce8b2d806fc9f54b121955 *orig/INSTALL.TXT
+d6ae93d795b8855ee512ed5101bd8085 *orig/README.TXT
+ded3ac5cf2ca98edc5d6f1d22a637c7e *src/Pspline.f
