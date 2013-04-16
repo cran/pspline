@@ -95,8 +95,10 @@ c
         xi = x(i)
         if (spcwrd .and. i .gt. 1 .and.
      1      dabs(xi - xim1 - delta) .gt. critrn) spcwrd = .false.
-        if (i .ge. norder .and. xi .le. x(i-norder+1)) then
-          ier = 5
+        if (i .ge. norder) then
+          if (xi .le. x(i-norder+1)) then
+            ier = 5
+          endif
         endif
         xim1 = xi
       end do
