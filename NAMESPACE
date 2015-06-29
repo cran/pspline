@@ -1,5 +1,8 @@
 useDynLib(pspline)
 
+importFrom(graphics, lines, matlines, matplot, plot)
+importFrom(stats, time)
+
 export(sm.spline, smooth.Pspline)
 
 S3method(lines, smooth.Pspline)
