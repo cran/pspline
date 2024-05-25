@@ -136,14 +136,14 @@ c
 c
 c  ********************  call FMM  **************************
 c
-	call fmm   (n, nvar, norder, x, w, y, yhat, lev, gcv, cv, df,
+        call fmm   (n, nvar, norder, x, w, y, yhat, lev, gcv, cv, df,
      1              lambda, method, work, tol, ier)
         if (ier .ne. 0) return
-	if (method .gt. 2 .and. df .gt. dfmax) then
+        if (method .gt. 2 .and. df .gt. dfmax) then
           df = dfmax
           call fmm (n, nvar, norder, x, w, y, yhat, lev, gcv, cv, df,
-     1              lambda, 2,      work, tol, ier)
-	endif
+     1              lambda, 2, work, tol, ier)
+        endif
       endif
 c
       return
@@ -1427,10 +1427,11 @@ c
       data j/1/
       save j,deltal,deltar
 c
-                                        go to (10,20), index
-   10 j = 1
+c      go to (10,20), index
+      if (index .ne. 1) go to 20
+      j = 1
       biatx(1) = 1d0
-      if (j .ge. jhigh)                 go to 99
+      if (j .ge. jhigh) return
 c
    20    jp1 = j + 1
          deltar(j) = t(left+j) - x
@@ -1444,8 +1445,6 @@ c
          biatx(jp1) = saved
          j = jp1
          if (j .lt. jhigh)              go to 20
-c
-   99                                   return
       end
 c  --------------------------------------------------------------------------
       subroutine dpbvalue ( t, bcoef, n, k, x, jderiv, fofx )
@@ -1599,10 +1598,10 @@ c**** set output and return.
       left = ilo
                                         return
   110 mflag = 1
-	  if (x .eq. xt(lxt)) mflag = 0
+      if (x .eq. xt(lxt)) mflag = 0
       left = lxt
   111 if (left .eq. 1)                  return
-	  left = left - 1
-	  if (xt(left) .lt. xt(lxt))        return
-                                            go to 111
+      left = left - 1
+      if (xt(left) .lt. xt(lxt))    return
+      go to 111
       end

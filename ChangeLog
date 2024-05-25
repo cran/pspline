@@ -1,7 +1,22 @@
-1.0-16 2015-06-29
+1.0-20 2024-05-24
+
+	Modernize Fortran, including removing computed goto.
+
+1.0-19 2022-02-19
+
+	Remove 'orig' directory at KH's request.
+
+1.0-18 2017-06-13
+
+	Add registration
+
+1.0-17 2015-06-29
+
+	Tweak NAMESPACE imports
+
+1.0-16 2013-04-16
 
 	Avoid -fbounds-check error
-	Tweak NAMESPACE imports
 
 1.0-15 2013-03-01
 

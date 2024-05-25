@@ -1,10 +1,10 @@
-e80d4ae888ed4fd5a496789a14894539 *ChangeLog
-006098b93be209a18b5d52b1a6dec09a *DESCRIPTION
+7c0ed7dad83d96b890598361953c542e *ChangeLog
+9345bc797e030136a0dd40d33d285acf *DESCRIPTION
 68fcff984661ca49e8a161442aab15dc *INDEX
 db1846b2a1a553aa44cb0aea1e2a0e30 *NAMESPACE
 a288cda4142cd32b09d8c0be39a60d87 *R/Pspline.q
 4369bfc715437628998fdae15a58a47b *R/sm.R
 d381442e6eeb2a4e5d62e7d395f2600b *man/predict.smooth.Pspline.Rd
 f67375df7a71ecc2c09b098ae45777e9 *man/smooth.Pspline.Rd
-7a93299fa16ce723c83c8e5a0c4bab92 *src/Pspline.f
+cdb6c6756564840c1abf2e5bc2e2c17b *src/Pspline.f
 38d825ec9b946c2eb6dac2280dd55074 *src/init.c
